@@ -7,11 +7,19 @@ namespace DiabetesLog
 {
     public static class Handler
     {
+        public static Action<string> Log { get; private set; }
+
         public static async Task EntryPoint(ILambdaContext context) 
         {
-            context.Logger.Log($"Started Invocation - {context.AwsRequestId }");
+            Log = (m) => {
+                context.Logger.Log(m);
+                System.Console.WriteLine(m);
+            };
+
+            Log($"Started Invocation - {context.AwsRequestId }");
             await Task.Delay(100);
-            context.Logger.Log($"Finished Invocation - {context.AwsRequestId }");
+            Log($"Version: {System.Environment.Version} from: {System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory()}");
+            Log($"Finished Invocation - {context.AwsRequestId}");
         }
     }
 }

@@ -30,7 +30,7 @@ $policyARN = (aws iam create-policy --policy-name $folderName --policy-document 
 aws iam attach-role-policy --role-name $folderName --policy-arn $policyARN
 
 Start-Sleep -s 10
-$namespace = (Get-Content .\Handler.cs | Select-String -Pattern "namespace " | Select -ExpandProperty Line).Replace("namespace ","")
+$namespace = (Get-Content .\Handler.cs | Select-String -Pattern "namespace " | Select-Object -ExpandProperty Line).Replace("namespace ","")
 aws lambda create-function --function-name $folderName --runtime "dotnetcore2.1" --handler "$folderName::$namespace.Handler::EntryPoint" --zip-file fileb://lambda_function.zip --role "$roleARN"
 
 Remove-Item .\lambda_function.zip
