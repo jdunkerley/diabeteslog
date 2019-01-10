@@ -3,6 +3,7 @@ Push-Location $PSScriptRoot
 dotnet publish -c Release -r linux-x64 . /p:GenerateRuntimeConfigurationFiles=true
 
 Push-Location .\bin\Release\netcoreapp2.1\linux-x64\publish\
+Copy-Item "$PSScriptRoot\bootstrap.sh" ".\bootstrap"
 Compress-Archive -Path * -CompressionLevel Fastest -DestinationPath $PSScriptRoot\lambda_function.zip -Force
 Pop-Location
 
@@ -31,7 +32,8 @@ aws iam attach-role-policy --role-name $folderName --policy-arn $policyARN
 
 Start-Sleep -s 10
 $namespace = (Get-Content .\Handler.cs | Select-String -Pattern "namespace " | Select-Object -ExpandProperty Line).Replace("namespace ","")
-aws lambda create-function --function-name $folderName --runtime "dotnetcore2.1" --handler "$folderName::$namespace.Handler::EntryPoint" --zip-file fileb://lambda_function.zip --role "$roleARN"
+# aws lambda create-function --function-name $folderName --runtime "dotnetcore2.1" --handler "$folderName::$namespace.Handler::EntryPoint" --zip-file fileb://lambda_function.zip --role "$roleARN"
+aws lambda create-function --function-name $folderName --runtime "provided" --handler "$folderName::$namespace.Handler::EntryPoint" --zip-file fileb://lambda_function.zip --role "$roleARN"
 
 Remove-Item .\lambda_function.zip
 Pop-Location

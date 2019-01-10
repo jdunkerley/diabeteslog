@@ -17,4 +17,5 @@ curl -sSL -o /opt/runner/runner.zip https://s3.eu-west-2.amazonaws.com/jdunkerle
 unzip /opt/runner/runner.zip
 
 # Processing
-
+cd $LAMBDA_TASK_ROOT
+dotnet /opt/runner/runner.dll "$LAMBDA_TASK_ROOT/diabeteslog.dll "DiabetesLog.Handler" "EntryPoint"

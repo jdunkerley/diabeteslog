@@ -3,6 +3,8 @@ Push-Location $PSScriptRoot
 dotnet publish -c Release -r linux-x64 . /p:GenerateRuntimeConfigurationFiles=true
 
 Push-Location .\bin\Release\netcoreapp2.1\linux-x64\publish\
+Copy-Item "$PSScriptRoot\bootstrap.sh" ".\bootstrap"
+wsl chmod 777 "./bootstrap"
 Compress-Archive -Path * -CompressionLevel Fastest -DestinationPath $PSScriptRoot\lambda_function.zip -Force
 Pop-Location
 
