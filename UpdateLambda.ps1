@@ -9,6 +9,7 @@ Compress-Archive -Path * -CompressionLevel Fastest -DestinationPath $PSScriptRoo
 Pop-Location
 
 $folderName = Split-Path -leaf $PSScriptRoot
+aws s3 cp ./lambda_function.zip "s3://jdunkerley/$folderName.zip"
 aws lambda update-function-code --function-name $folderName --zip-file fileb://lambda_function.zip
 
 Remove-Item .\lambda_function.zip
